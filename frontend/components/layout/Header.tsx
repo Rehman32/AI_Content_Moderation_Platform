@@ -2,7 +2,15 @@
 
 import { useTheme } from 'next-themes';
 import { useAuth } from '../../features/auth/context/AuthContext';
-import { LogOut, Moon, Sun, ShieldCheck } from 'lucide-react';
+import { LogOut, Moon, Sun, ShieldCheck, User as UserIcon } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../ui/dropdown-menu';
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -15,10 +23,9 @@ export function Header() {
         <span className="font-bold tracking-tight">AI Mod</span>
       </div>
       
-      <div className="hidden md:flex" /> {/* Spacer for desktop where sidebar holds logo */}
+      <div className="hidden md:flex" />
 
       <div className="flex items-center gap-4">
-        {/* Theme Toggle */}
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-transparent hover:bg-accent hover:text-accent-foreground"
@@ -28,22 +35,32 @@ export function Header() {
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </button>
 
-        {/* User Dropdown / Info (Simplified for Phase 1) */}
         <div className="flex items-center gap-3 pl-4 border-l">
           <div className="hidden flex-col items-end text-sm md:flex">
             <span className="font-medium">{user?.firstName} {user?.lastName}</span>
             <span className="text-xs text-muted-foreground capitalize">{user?.role.toLowerCase()}</span>
           </div>
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold">
-            {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
-          </div>
-          <button
-            onClick={logout}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors ml-1"
-            title="Log out"
-          >
-            <LogOut className="h-4 w-4" />
-          </button>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary font-semibold hover:ring-2 hover:ring-primary hover:ring-offset-2 transition-all cursor-pointer outline-none">
+                {user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer" disabled>
+                <UserIcon className="mr-2 h-4 w-4" />
+                <span>Profile Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={logout} className="text-destructive cursor-pointer hover:bg-destructive/10 hover:text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Log out</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>
