@@ -9,6 +9,9 @@ npm-debug.log
 dist/
 build/
 
+# Uploaded files
+uploads/
+
 # IDE files (optional but recommended)
 .vscode/
 .idea/
