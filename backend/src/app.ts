@@ -5,6 +5,7 @@ import { errorHandler } from './middleware/error.middleware';
 import authRoutes from './modules/auth/auth.routes';
 import policyRoutes from './modules/policies/policy.routes';
 import submissionRoutes from './modules/submissions/submission.routes';
+import moderationRoutes from './modules/moderation/moderation.routes';
 
 const app: Application = express();
 
@@ -28,6 +29,7 @@ app.get('/',(req: Request , res:Response) => {
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/policies', policyRoutes);
 app.use('/api/v1/submissions', submissionRoutes);
+app.use('/api/v1/moderation', moderationRoutes);
 
 // Global Error Handler
 app.use(errorHandler);

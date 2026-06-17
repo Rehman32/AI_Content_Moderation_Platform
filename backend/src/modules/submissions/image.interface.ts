@@ -1,4 +1,5 @@
 import { Document, Types } from 'mongoose';
+import { IModerationResult } from '../moderation/moderation.types';
 
 /**
  * Processing status for an individual image within a submission.
@@ -53,6 +54,7 @@ export interface IImage extends Document {
   uploadedBy: Types.ObjectId;
   status: ImageStatus;
   meta: IImageMeta;
+  moderationResult?: IModerationResult;   // Populated after AI analysis
   createdAt: Date;
   updatedAt: Date;
 }

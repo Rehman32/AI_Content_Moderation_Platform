@@ -28,6 +28,29 @@ const ImageMetaSchema = new Schema(
   { _id: false }
 );
 
+const CategoryResultSchema = new Schema(
+  {
+    name: { type: String, required: true },
+    confidence: { type: Number, required: true },
+    flagged: { type: Boolean, required: true },
+    reasoning: { type: String, default: '' },
+  },
+  { _id: false }
+);
+
+const ModerationResultSchema = new Schema(
+  {
+    safe: { type: Boolean, required: true },
+    overallRisk: { type: Number, required: true },
+    categories: { type: [CategoryResultSchema], default: [] },
+    analyzedAt: { type: Date, required: true },
+    providerName: { type: String, required: true },
+    modelVersion: { type: String, required: true },
+    processingTimeMs: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
 const ImageSchema = new Schema<IImage>(
   {
     submissionId: {
@@ -48,6 +71,10 @@ const ImageSchema = new Schema<IImage>(
     meta: {
       type: ImageMetaSchema,
       required: [true, 'Image metadata is required'],
+    },
+    moderationResult: {
+      type: ModerationResultSchema,
+      default: null,
     },
   },
   {
