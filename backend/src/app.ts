@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import { errorHandler } from './middleware/error.middleware';
 import authRoutes from './modules/auth/auth.routes';
+import policyRoutes from './modules/policies/policy.routes';
 
 const app: Application = express();
 
@@ -20,6 +21,7 @@ app.get('/',(req: Request , res:Response) => {
 
 // API Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/policies', policyRoutes);
 
 // Global Error Handler
 app.use(errorHandler);
