@@ -1,0 +1,17 @@
+info:
+  name: Upload Images
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5000/api/v1/submissions/6a354ab8f00c0a53ed9e9877/images
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMzU0MzJkZjAwYzBhNTNlZDllOTg3MyIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzgxODc1ODQ3LCJleHAiOjE3ODE5NjIyNDd9.bVeyjev5igS9VI5anyAL_rKFLTWuJZgyimN2CcRCbbg
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,17 @@
+info:
+  name: Activate Version 1
+  type: http
+  seq: 1
+
+http:
+  method: PATCH
+  url: http://localhost:5000/api/v1/policies/6a35483ff00c0a53ed9e9875/activate
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMzU0NzQzZjAwYzBhNTNlZDllOTg3NCIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTg3NjY0MiwiZXhwIjoxNzgxOTYzMDQyfQ.4OhJmVzAYZe4PUyTF037cnWopIcFqYYYgLywr-iIk_g
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

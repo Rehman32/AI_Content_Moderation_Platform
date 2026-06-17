@@ -1,0 +1,58 @@
+info:
+  name: Create Policy Version 1
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5000/api/v1/policies
+  body:
+    type: json
+    data: |-
+      {
+          "name": "Community Safety Policy",
+          "description": "Initial moderation policy covering hate speech, harassment, and violence categories",
+          "rules": [
+            {
+              "category": "HATE_SPEECH",
+              "enabled": true,
+              "severity": "HIGH",
+              "action": "REJECT",
+              "confidenceThreshold": 0.8,
+              "description": "Reject content with high-confidence hate speech"
+            },
+            {
+              "category": "HARASSMENT",
+              "enabled": true,
+              "severity": "MEDIUM",
+              "action": "FLAG",
+              "confidenceThreshold": 0.7,
+              "description": "Flag potential harassment for human review"
+            },
+            {
+              "category": "VIOLENCE",
+              "enabled": true,
+              "severity": "HIGH",
+              "action": "HOLD",
+              "confidenceThreshold": 0.75,
+              "description": "Hold violent content pending review"
+            },
+            {
+              "category": "SPAM",
+              "enabled": true,
+              "severity": "LOW",
+              "action": "FLAG",
+              "confidenceThreshold": 0.6,
+              "description": "Flag low-confidence spam for review"
+            }
+          ]
+        }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMzU0NzQzZjAwYzBhNTNlZDllOTg3NCIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTg3NjY0MiwiZXhwIjoxNzgxOTYzMDQyfQ.4OhJmVzAYZe4PUyTF037cnWopIcFqYYYgLywr-iIk_g
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

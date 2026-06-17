@@ -1,0 +1,74 @@
+info:
+  name: Create Policy Version 2 (Stricter)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5000/api/v1/policies
+  body:
+    type: json
+    data: |-
+      {
+          "name": "Enhanced Safety Policy v2",
+          "description": "Stricter thresholds after Q1 review, added sexual content and self-harm categories",
+          "rules": [
+            {
+              "category": "HATE_SPEECH",
+              "enabled": true,
+              "severity": "CRITICAL",
+              "action": "REJECT",
+              "confidenceThreshold": 0.6,
+              "description": "Lower threshold: reject more aggressively"
+            },
+            {
+              "category": "HARASSMENT",
+              "enabled": true,
+              "severity": "HIGH",
+              "action": "REJECT",
+              "confidenceThreshold": 0.65,
+              "description": "Upgraded from FLAG to REJECT"
+            },
+            {
+              "category": "VIOLENCE",
+              "enabled": true,
+              "severity": "HIGH",
+              "action": "REJECT",
+              "confidenceThreshold": 0.7,
+              "description": "Upgraded from HOLD to REJECT"
+            },
+            {
+              "category": "SEXUAL_CONTENT",
+              "enabled": true,
+              "severity": "CRITICAL",
+              "action": "REJECT",
+              "confidenceThreshold": 0.5,
+              "description": "New category: zero tolerance"
+            },
+            {
+              "category": "SELF_HARM",
+              "enabled": true,
+              "severity": "CRITICAL",
+              "action": "ESCALATE",
+              "confidenceThreshold": 0.4,
+              "description": "New category: escalate to human immediately"
+            },
+            {
+              "category": "SPAM",
+              "enabled": true,
+              "severity": "LOW",
+              "action": "APPROVE",
+              "confidenceThreshold": 0.9,
+              "description": "Relaxed: only reject very obvious spam"
+            }
+          ]
+        }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMzU0NzQzZjAwYzBhNTNlZDllOTg3NCIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MTg3NjY0MiwiZXhwIjoxNzgxOTYzMDQyfQ.4OhJmVzAYZe4PUyTF037cnWopIcFqYYYgLywr-iIk_g
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

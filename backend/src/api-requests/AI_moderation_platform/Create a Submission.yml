@@ -1,0 +1,24 @@
+info:
+  name: Create a Submission
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: http://localhost:5000/api/v1/submissions
+  body:
+    type: json
+    data: |-
+      {
+          "title": "Product Review Images",
+          "description": "User-uploaded product photos for moderation review"
+        }
+  auth:
+    type: bearer
+    token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMzU0MzJkZjAwYzBhNTNlZDllOTg3MyIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzgxODc1ODQ3LCJleHAiOjE3ODE5NjIyNDd9.bVeyjev5igS9VI5anyAL_rKFLTWuJZgyimN2CcRCbbg
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

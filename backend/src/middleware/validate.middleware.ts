@@ -17,8 +17,8 @@ export const validate =
           success: false,
           error: {
             message: 'Validation Error',
-            details: (error as any).errors.map((err: any) => ({
-              field: err.path.join('.'),
+            details: (error.issues || (error as any).errors || []).map((err: any) => ({
+              field: err.path ? err.path.join('.') : '',
               message: err.message,
             })),
           },
