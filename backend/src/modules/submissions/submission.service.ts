@@ -5,6 +5,9 @@ import { SubmissionStatus } from './submission.interface';
 import { ImageStatus } from './image.interface';
 import path from 'path';
 import fs from 'fs';
+import { auditService } from '../audit/audit.service';
+import { AuditEventType, EntityType } from '../audit/audit.interface';
+import { UserRole } from '../users/user.interface';
 
 interface CreateSubmissionInput {
   title: string;
@@ -36,6 +39,15 @@ export class SubmissionService {
       title: data.title,
       description: data.description || '',
       submittedBy: data.submittedBy,
+    });
+
+    await auditService.logEvent({
+      actorId: data.submittedBy,
+      actorRole: UserRole.USER, // Assuming generic USER, platform implies anyone can submit
+      eventType: AuditEventType.SUBMISSION_CREATED,
+      entityType: EntityType.SUBMISSION,
+      entityId: submission._id,
+      newState: { title: submission.title, status: submission.status },
     });
 
     return submission;
@@ -105,6 +117,15 @@ export class SubmissionService {
     // Atomically increment imageCount
     await SubmissionModel.findByIdAndUpdate(submissionId, {
       $inc: { imageCount: files.length },
+    });
+
+    await auditService.logEvent({
+      actorId: userId,
+      actorRole: UserRole.USER,
+      eventType: AuditEventType.IMAGES_UPLOADED,
+      entityType: EntityType.SUBMISSION,
+      entityId: submission._id,
+      metadata: { uploadedCount: files.length, fileNames: files.map((f) => f.originalname) },
     });
 
     return images;

@@ -6,6 +6,8 @@ import { ImageModel } from '../submissions/image.model';
 import { ImageStatus } from '../submissions/image.interface';
 import { AppError } from '../../utils/AppError';
 import { Types } from 'mongoose';
+import { auditService } from '../audit/audit.service';
+import { AuditEventType, EntityType } from '../audit/audit.interface';
 
 const evaluationEngine = new PolicyEvaluationEngine();
 
@@ -107,6 +109,20 @@ export class VerdictService {
       `[VerdictService] Verdict generated for image ${imageId}: ` +
       `${evaluation.finalOutcome} | ${evaluation.triggeredRules.length} rule(s) triggered`
     );
+
+    await auditService.logEvent({
+      actorId: null, // SYSTEM initiated action via admin trigger or batch process
+      actorRole: 'SYSTEM',
+      eventType: AuditEventType.VERDICT_GENERATED,
+      entityType: EntityType.VERDICT,
+      entityId: verdict._id,
+      newState: { outcome: evaluation.finalOutcome },
+      metadata: { 
+        imageId, 
+        policyVersionId: activePolicy._id, 
+        triggeredRulesCount: evaluation.triggeredRules.length 
+      },
+    });
 
     return verdict;
   }

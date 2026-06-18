@@ -1,6 +1,9 @@
 import { PolicyVersionModel } from './policy.model';
 import { IPolicyRule } from './policy.interface';
 import { AppError } from '../../utils/AppError';
+import { auditService } from '../audit/audit.service';
+import { AuditEventType, EntityType } from '../audit/audit.interface';
+import { UserRole } from '../users/user.interface';
 
 interface CreatePolicyInput {
   name: string;
@@ -37,6 +40,15 @@ export class PolicyService {
       description: data.description,
       rules: data.rules,
       createdBy: data.createdBy,
+    });
+
+    await auditService.logEvent({
+      actorId: data.createdBy,
+      actorRole: UserRole.ADMIN, // Only admins can create policies
+      eventType: AuditEventType.POLICY_CREATED,
+      entityType: EntityType.POLICY_VERSION,
+      entityId: policyVersion._id,
+      newState: { versionNumber: policyVersion.versionNumber, name: policyVersion.name },
     });
 
     return policyVersion;
@@ -161,9 +173,20 @@ export class PolicyService {
     await targetVersion.save();
 
     // Return populated version for the response
-    return PolicyVersionModel.findById(targetVersion._id)
+    const populatedVersion = await PolicyVersionModel.findById(targetVersion._id)
       .populate('createdBy', 'firstName lastName email')
       .populate('activatedBy', 'firstName lastName email');
+
+    await auditService.logEvent({
+      actorId: activatedBy,
+      actorRole: UserRole.ADMIN, // Only admins can activate policies
+      eventType: AuditEventType.POLICY_ACTIVATED,
+      entityType: EntityType.POLICY_VERSION,
+      entityId: targetVersion._id,
+      newState: { versionNumber: targetVersion.versionNumber, isActive: true },
+    });
+
+    return populatedVersion;
   }
 
   /**
