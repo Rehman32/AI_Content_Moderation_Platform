@@ -9,6 +9,7 @@ import moderationRoutes from './modules/moderation/moderation.routes';
 import verdictRoutes from './modules/verdicts/verdict.routes';
 import auditRoutes from './modules/audit/audit.routes';
 import appealRoutes from './modules/appeals/appeal.routes';
+import analyticsRoutes from './modules/analytics/analytics.routes';
 
 const app: Application = express();
 
@@ -36,6 +37,7 @@ app.use('/api/v1/moderation', moderationRoutes);
 app.use('/api/v1/verdicts', verdictRoutes);
 app.use('/api/v1/audit', auditRoutes);
 app.use('/api/v1/appeals', appealRoutes);
+app.use('/api/v1/analytics', analyticsRoutes);
 
 // Global Error Handler
 app.use(errorHandler);
