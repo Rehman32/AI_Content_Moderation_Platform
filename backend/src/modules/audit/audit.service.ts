@@ -48,11 +48,11 @@ export class AuditService {
         metadata: params.metadata,
       });
       // Do not log the payload to console to prevent leaking PII/sensitive data in standard stdout logs
-    } catch (error) {
+    } catch (error: any) {
       // If audit logging fails, it's a critical system error. 
       // Depending on strictness, we might throw or just log to a critical alert channel.
       console.error('[AuditService] FAILED TO WRITE AUDIT LOG:', error);
-      throw new Error('Failed to write to audit log');
+      throw new Error('Failed to write to audit log: ' + error.message);
     }
   }
 

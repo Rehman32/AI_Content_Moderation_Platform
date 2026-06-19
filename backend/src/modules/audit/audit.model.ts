@@ -69,21 +69,20 @@ AuditLogSchema.index({ createdAt: -1 });
 // Mongoose middleware to prevent accidental mutations of audit records.
 
 // @ts-ignore
-AuditLogSchema.pre('save', function (next: any) {
+AuditLogSchema.pre('save', function () {
   if (!this.isNew) {
-    return next(new Error('Audit logs are immutable and cannot be updated.'));
+    throw new Error('Audit logs are immutable and cannot be updated.');
   }
-  next();
 });
 
 // @ts-ignore
-AuditLogSchema.pre(['updateOne', 'updateMany', 'findOneAndUpdate', 'replaceOne'], function (next: any) {
-  next(new Error('Audit logs are immutable and cannot be updated via query.'));
+AuditLogSchema.pre(['updateOne', 'updateMany', 'findOneAndUpdate', 'replaceOne'], function () {
+  throw new Error('Audit logs are immutable and cannot be updated via query.');
 });
 
 // @ts-ignore
-AuditLogSchema.pre(['deleteOne', 'deleteMany', 'findOneAndDelete'], function (next: any) {
-  next(new Error('Audit logs are immutable and cannot be deleted.'));
+AuditLogSchema.pre(['deleteOne', 'deleteMany', 'findOneAndDelete'], function () {
+  throw new Error('Audit logs are immutable and cannot be deleted.');
 });
 
 export const AuditLogModel = mongoose.model<IAuditLog>('AuditLog', AuditLogSchema);

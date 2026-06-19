@@ -11,6 +11,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters long for security'),
   JWT_EXPIRES_IN: z.string().default('1d'),
   GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required for moderation'),
+  GEMINI_MODEL: z.string().default('gemini-2.5-flash'),
   AI_PROVIDER: z.enum(['gemini']).default('gemini'),
   ADMIN_EMAIL: z.string().email('ADMIN_EMAIL must be a valid email').default('admin@example.com'),
   ADMIN_PASSWORD: z.string().min(8, 'ADMIN_PASSWORD must be at least 8 characters').default('Admin@123!'),

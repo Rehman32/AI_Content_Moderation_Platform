@@ -1,4 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
+import { env } from '../../config/env.config';
 import { IAIProvider } from './ai-provider.interface';
 import {
   IAIAnalysisInput,
@@ -68,7 +69,7 @@ Rules:
 
 export class GeminiProvider implements IAIProvider {
   public readonly providerName = 'gemini';
-  public readonly modelVersion = 'gemini-2.0-flash';
+  public readonly modelVersion = env.GEMINI_MODEL;
 
   private readonly client: GoogleGenAI;
 
