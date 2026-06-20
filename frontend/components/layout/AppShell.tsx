@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { ProtectedRoute } from '../guards/ProtectedRoute';
+import { ErrorBoundary } from '../guards/ErrorBoundary';
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -13,7 +14,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="flex flex-1 flex-col overflow-hidden">
           <Header />
           <main className="flex-1 overflow-y-auto">
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </main>
         </div>
       </div>

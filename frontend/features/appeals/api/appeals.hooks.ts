@@ -44,12 +44,33 @@ export const useApproveAppeal = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ appealId, adminNotes }: { appealId: string; adminNotes?: string }) => appealsApi.approve(appealId, adminNotes),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: appealKeys.all });
-      toast.success('Appeal approved successfully');
+    onMutate: async ({ appealId }) => {
+      await queryClient.cancelQueries({ queryKey: appealKeys.all });
+      const previousAppeals = queryClient.getQueryData(appealKeys.all);
+      // Optimistically update
+      queryClient.setQueriesData({ queryKey: appealKeys.all }, (old: any) => {
+        if (!old || !old.data || !old.data.appeals) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            appeals: old.data.appeals.map((appeal: any) =>
+              appeal._id === appealId ? { ...appeal, status: 'APPROVED' } : appeal
+            ),
+          },
+        };
+      });
+      return { previousAppeals };
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(appealKeys.all, context?.previousAppeals);
+      toast.error(err.message || 'Failed to approve appeal');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: appealKeys.all });
+    },
+    onSuccess: () => {
+      toast.success('Appeal approved successfully');
     },
   });
 };
@@ -58,12 +79,33 @@ export const useRejectAppeal = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ appealId, adminNotes }: { appealId: string; adminNotes?: string }) => appealsApi.reject(appealId, adminNotes),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: appealKeys.all });
-      toast.success('Appeal rejected successfully');
+    onMutate: async ({ appealId }) => {
+      await queryClient.cancelQueries({ queryKey: appealKeys.all });
+      const previousAppeals = queryClient.getQueryData(appealKeys.all);
+      // Optimistically update
+      queryClient.setQueriesData({ queryKey: appealKeys.all }, (old: any) => {
+        if (!old || !old.data || !old.data.appeals) return old;
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            appeals: old.data.appeals.map((appeal: any) =>
+              appeal._id === appealId ? { ...appeal, status: 'REJECTED' } : appeal
+            ),
+          },
+        };
+      });
+      return { previousAppeals };
     },
-    onError: (error: Error) => {
-      toast.error(error.message);
+    onError: (err, variables, context) => {
+      queryClient.setQueryData(appealKeys.all, context?.previousAppeals);
+      toast.error(err.message || 'Failed to reject appeal');
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: appealKeys.all });
+    },
+    onSuccess: () => {
+      toast.success('Appeal rejected successfully');
     },
   });
 };

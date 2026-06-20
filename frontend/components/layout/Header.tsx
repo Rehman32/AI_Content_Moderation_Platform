@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { CommandMenu } from '../ui-custom/CommandMenu';
 
 export function Header() {
   const { user, logout } = useAuth();
@@ -25,7 +26,11 @@ export function Header() {
       
       <div className="hidden md:flex" />
 
-      <div className="flex items-center gap-4">
+      <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="w-full flex-1 md:w-auto md:flex-none">
+          <CommandMenu />
+        </div>
+
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-transparent hover:bg-accent hover:text-accent-foreground"
