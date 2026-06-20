@@ -234,20 +234,8 @@ Replicating Mongoose schemas into TypeScript interfaces required careful mapping
 
 ---
 
-## 14. Screenshots
 
-*(Replace with actual screenshots of your running application)*
 
-| User Dashboard | Submission Review |
-| :---: | :---: |
-| ![User Dashboard](./docs/images/user-dashboard.png) | ![Submission Review](./docs/images/submission-review.png) |
-
-| Admin Analytics | Appeals Queue |
-| :---: | :---: |
-| ![Admin Analytics](./docs/images/analytics.png) | ![Appeals Queue](./docs/images/appeals.png) |
-
----
-
-## 15. Conclusion
+##  Conclusion
 
 This project transcends a simple CRUD application. It demonstrates the ability to conceptualize, architect, and deliver a complex, stateful system integrating modern AI capabilities with traditional enterprise requirements like RBAC, immutable auditing, and deterministic policy engines. The implementation balances rapid development with scalable architectural patterns, resulting in a robust, production-oriented content moderation platform.
