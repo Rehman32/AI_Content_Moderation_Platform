@@ -14,6 +14,7 @@ import verdictRoutes from './modules/verdicts/verdict.routes';
 import auditRoutes from './modules/audit/audit.routes';
 import appealRoutes from './modules/appeals/appeal.routes';
 import analyticsRoutes from './modules/analytics/analytics.routes';
+import { setupSwagger } from './config/swagger';
 
 const app: Application = express();
 
@@ -69,10 +70,13 @@ app.use('/api/v1/audit', auditRoutes);
 app.use('/api/v1/appeals', appealRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 
+// ─── Documentation ───────────────────────────────────────────────────────────
+setupSwagger(app);
+
 // ─── Error Handling ──────────────────────────────────────────────────────────
 
 // Global 404 Handler for unmatched routes
-app.use('*', notFoundHandler);
+app.use(notFoundHandler);
 
 // Global Error Handler
 app.use(errorHandler);
