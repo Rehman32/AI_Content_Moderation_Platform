@@ -9,49 +9,163 @@ import { UserRole } from '../users/user.interface';
 const router = Router();
 const appealController = new AppealController();
 
-// All appeal routes require authentication
+/**
+ * @swagger
+ * tags:
+ *   name: Appeals
+ *   description: Appeals management for moderation decisions
+ */
+
 router.use(protect);
 
-// ─── Read Routes (authenticated users — service layer enforces ownership) ─────
-
-// Admin review queue — list all appeals with optional status filter
+/**
+ * @swagger
+ * /api/v1/appeals:
+ *   get:
+ *     summary: List all appeals (Admin queue)
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of appeals
+ */
 router.get(
   '/',
   restrictTo(UserRole.ADMIN),
   appealController.list
 );
 
-// Get a single appeal (ownership check in service)
+/**
+ * @swagger
+ * /api/v1/appeals/{appealId}:
+ *   get:
+ *     summary: Get a single appeal
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: appealId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Appeal details
+ */
 router.get(
   '/:appealId',
   appealController.getById
 );
 
-// Get all appeals for a specific submission (ownership check in service)
+/**
+ * @swagger
+ * /api/v1/appeals/submissions/{submissionId}:
+ *   get:
+ *     summary: Get all appeals for a submission
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: submissionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: List of appeals
+ */
 router.get(
   '/submissions/:submissionId',
   appealController.getBySubmission
 );
 
-// ─── Write Routes (authenticated user creates) ────────────────────────────────
-
-// File an appeal for a submission (user must own the submission)
+/**
+ * @swagger
+ * /api/v1/appeals/submissions/{submissionId}:
+ *   post:
+ *     summary: File an appeal for a submission
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: submissionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               reason:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Appeal created
+ */
 router.post(
   '/submissions/:submissionId',
   validate(createAppealSchema),
   appealController.createAppeal
 );
 
-// ─── Admin Review Routes ──────────────────────────────────────────────────────
-
-// Triage: mark appeal as under review
+/**
+ * @swagger
+ * /api/v1/appeals/{appealId}/review:
+ *   patch:
+ *     summary: Mark an appeal as under review
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: appealId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Appeal marked under review
+ */
 router.patch(
   '/:appealId/review',
   restrictTo(UserRole.ADMIN),
   appealController.markUnderReview
 );
 
-// Approve appeal (overrides verdict, non-destructive)
+/**
+ * @swagger
+ * /api/v1/appeals/{appealId}/approve:
+ *   patch:
+ *     summary: Approve an appeal
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: appealId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               adminNotes:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Appeal approved
+ */
 router.patch(
   '/:appealId/approve',
   restrictTo(UserRole.ADMIN),
@@ -59,7 +173,33 @@ router.patch(
   appealController.approveAppeal
 );
 
-// Reject appeal (original verdict stands)
+/**
+ * @swagger
+ * /api/v1/appeals/{appealId}/reject:
+ *   patch:
+ *     summary: Reject an appeal
+ *     tags: [Appeals]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: appealId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               adminNotes:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Appeal rejected
+ */
 router.patch(
   '/:appealId/reject',
   restrictTo(UserRole.ADMIN),

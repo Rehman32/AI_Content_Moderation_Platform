@@ -9,45 +9,128 @@ const router = Router();
 const moderationController = new ModerationController();
 const orchestratorController = new OrchestratorController();
 
-// All moderation routes require authentication
+/**
+ * @swagger
+ * tags:
+ *   name: Moderation
+ *   description: AI Analysis and Pipeline Orchestration
+ */
+
 router.use(protect);
 
-// ─── Image-Level: Raw AI Analysis (step 1 only) ──────────────────────────────
-
-// Trigger AI analysis for a single image — AI output only, no verdict
+/**
+ * @swagger
+ * /api/v1/moderation/images/{imageId}/analyze:
+ *   post:
+ *     summary: Trigger raw AI analysis for a single image
+ *     tags: [Moderation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: AI analysis complete
+ */
 router.post(
   '/images/:imageId/analyze',
   restrictTo(UserRole.ADMIN),
   moderationController.analyzeImage
 );
 
-// Retrieve stored moderation result for a single image (any authenticated user)
+/**
+ * @swagger
+ * /api/v1/moderation/images/{imageId}/result:
+ *   get:
+ *     summary: Retrieve stored moderation result for an image
+ *     tags: [Moderation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Moderation result
+ */
 router.get(
   '/images/:imageId/result',
   moderationController.getResult
 );
 
-// ─── Image-Level: Full Pipeline Orchestration ────────────────────────────────
-
-// Run the full pipeline: AI Analysis → Policy Evaluation → Verdict → Status Update
+/**
+ * @swagger
+ * /api/v1/moderation/images/{imageId}/process:
+ *   post:
+ *     summary: Run full moderation pipeline for an image
+ *     tags: [Moderation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: imageId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Pipeline executed successfully
+ */
 router.post(
   '/images/:imageId/process',
   restrictTo(UserRole.ADMIN),
   orchestratorController.processImage
 );
 
-// ─── Submission-Level: Raw Batch AI Analysis ─────────────────────────────────
-
-// Trigger batch AI analysis for all pending images (no verdict generation)
+/**
+ * @swagger
+ * /api/v1/moderation/submissions/{submissionId}/analyze:
+ *   post:
+ *     summary: Trigger batch AI analysis for a submission
+ *     tags: [Moderation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: submissionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Batch analysis complete
+ */
 router.post(
   '/submissions/:submissionId/analyze',
   restrictTo(UserRole.ADMIN),
   moderationController.analyzeSubmission
 );
 
-// ─── Submission-Level: Full Pipeline Orchestration ───────────────────────────
-
-// Run the full pipeline for every processable image in a submission
+/**
+ * @swagger
+ * /api/v1/moderation/submissions/{submissionId}/process:
+ *   post:
+ *     summary: Run full moderation pipeline for an entire submission
+ *     tags: [Moderation]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: submissionId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Pipeline executed for all images
+ */
 router.post(
   '/submissions/:submissionId/process',
   restrictTo(UserRole.ADMIN),
