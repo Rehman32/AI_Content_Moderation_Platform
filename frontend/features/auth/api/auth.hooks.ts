@@ -11,20 +11,14 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: (data: LoginFormData) => authApi.login(data),
-    onSuccess: (response) => {
-      // The API returns standard ApiResponse with data.user and data.token
-      // Wait, let's check API definition carefully: `AuthResponse`
-      // For `/auth/login`, our backend returns: { success: true, token, data: { user } } 
-      // Oops! Let's adapt to what backend actually returns.
-      // Based on our swagger guide: backend returns `token` at root OR inside data depending on endpoint.
-      // We will parse it dynamically.
-      const token = response.data?.token || (response as any).token;
-      const user = response.data?.user || (response.data as any);
+    onSuccess: (response: any) => {
+      // Backend returns: { success, data: { user }, token }
+      const token = response.token || response.data?.token;
+      const user = response.data?.user;
 
       if (token && user) {
         login(user, token);
         toast.success('Successfully logged in');
-        // Redirect to appropriate dashboard based on role
         if (user.role === 'ADMIN') {
           router.push('/admin');
         } else {
@@ -44,9 +38,9 @@ export const useRegister = () => {
 
   return useMutation({
     mutationFn: (data: RegisterFormData) => authApi.register(data),
-    onSuccess: (response) => {
-      const token = response.data?.token || (response as any).token;
-      const user = response.data?.user || (response.data as any);
+    onSuccess: (response: any) => {
+      const token = response.token || response.data?.token;
+      const user = response.data?.user;
 
       if (token && user) {
         login(user, token);
