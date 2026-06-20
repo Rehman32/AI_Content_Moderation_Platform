@@ -39,3 +39,45 @@ export const useCreateAppeal = () => {
     },
   });
 };
+
+export const useApproveAppeal = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ appealId, adminNotes }: { appealId: string; adminNotes?: string }) => appealsApi.approve(appealId, adminNotes),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: appealKeys.all });
+      toast.success('Appeal approved successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useRejectAppeal = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ appealId, adminNotes }: { appealId: string; adminNotes?: string }) => appealsApi.reject(appealId, adminNotes),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: appealKeys.all });
+      toast.success('Appeal rejected successfully');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};
+
+export const useMarkAppealUnderReview = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (appealId: string) => appealsApi.markUnderReview(appealId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: appealKeys.all });
+      toast.success('Appeal marked as under review');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+};

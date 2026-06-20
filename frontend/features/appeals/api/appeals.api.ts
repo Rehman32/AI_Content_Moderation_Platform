@@ -26,4 +26,19 @@ export const appealsApi = {
     const res = await api.get<{ success: boolean; data: { appeals: Appeal[] } }>(`/appeals/submission/${submissionId}`);
     return res.data;
   },
+
+  approve: async (appealId: string, adminNotes?: string) => {
+    const res = await api.patch<{ success: boolean; data: { appeal: Appeal } }>(`/appeals/${appealId}/approve`, { adminNotes });
+    return res.data;
+  },
+
+  reject: async (appealId: string, adminNotes?: string) => {
+    const res = await api.patch<{ success: boolean; data: { appeal: Appeal } }>(`/appeals/${appealId}/reject`, { adminNotes });
+    return res.data;
+  },
+
+  markUnderReview: async (appealId: string) => {
+    const res = await api.patch<{ success: boolean; data: { appeal: Appeal } }>(`/appeals/${appealId}/review`);
+    return res.data;
+  },
 };

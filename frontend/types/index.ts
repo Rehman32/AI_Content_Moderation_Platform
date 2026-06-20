@@ -116,3 +116,35 @@ export interface DashboardMetrics {
   appealSuccessRate: number;
   generatedAt: string;
 }
+
+export interface PolicyRule {
+  category: string;
+  threshold: number;
+  action: 'BLOCK' | 'FLAG_FOR_REVIEW' | 'APPROVE';
+}
+
+export interface PolicyVersion {
+  _id: string;
+  name: string;
+  description: string;
+  versionNumber: number;
+  rules: PolicyRule[];
+  isActive: boolean;
+  createdBy: string | { _id: string; firstName: string; lastName: string; email: string };
+  activatedAt: string | null;
+  activatedBy: string | null;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuditLog {
+  _id: string;
+  eventType: 'USER_REGISTERED' | 'USER_LOGGED_IN' | 'SUBMISSION_CREATED' | 'VERDICT_GENERATED' | 'APPEAL_CREATED' | 'APPEAL_REVIEWED' | 'POLICY_CREATED' | 'POLICY_ACTIVATED' | 'SETTINGS_UPDATED';
+  entityType: 'USER' | 'SUBMISSION' | 'IMAGE' | 'VERDICT' | 'APPEAL' | 'POLICY';
+  entityId: string;
+  actorId: string | { _id: string; firstName: string; lastName: string; email: string } | null;
+  metadata: any;
+  ipAddress: string | null;
+  createdAt: string;
+}

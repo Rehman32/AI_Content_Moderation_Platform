@@ -8,7 +8,9 @@ import { useDashboard } from '../../../features/analytics/api/analytics.hooks';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Badge } from '../../../components/ui/badge';
 import { RoleGuard } from '../../../components/guards/RoleGuard';
-import { Users, FileText, Image, ShieldCheck, AlertTriangle, Scale, TrendingUp, BarChart3 } from 'lucide-react';
+import { Users, FileText, Image, ShieldCheck, AlertTriangle, Scale, TrendingUp, BarChart3, Settings, Search, FileSearch, LineChart, ListTree } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '../../../components/ui/button';
 
 export default function AdminDashboardPage() {
   const { data, isLoading, error, refetch } = useDashboard();
@@ -48,6 +50,33 @@ export default function AdminDashboardPage() {
             );
           })}
         </div>
+
+        {/* Quick Links */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Navigate to management interfaces.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-4">
+              <Link href="/admin/moderation">
+                <Button variant="outline" className="gap-2"><Search className="h-4 w-4" /> Moderation Queue</Button>
+              </Link>
+              <Link href="/admin/appeals">
+                <Button variant="outline" className="gap-2"><Scale className="h-4 w-4" /> Appeals Queue</Button>
+              </Link>
+              <Link href="/admin/policies">
+                <Button variant="outline" className="gap-2"><Settings className="h-4 w-4" /> Policy Management</Button>
+              </Link>
+              <Link href="/admin/analytics">
+                <Button variant="outline" className="gap-2"><LineChart className="h-4 w-4" /> Advanced Analytics</Button>
+              </Link>
+              <Link href="/admin/audit">
+                <Button variant="outline" className="gap-2"><ListTree className="h-4 w-4" /> Audit Logs</Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
         <Card>
           <CardHeader>

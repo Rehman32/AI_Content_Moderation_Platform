@@ -16,4 +16,14 @@ export const moderationApi = {
     const res = await api.get<{ success: boolean; data: { verdicts: Verdict[] } }>(`/verdicts/submission/${submissionId}`);
     return res.data;
   },
+
+  generateForSubmission: async (submissionId: string) => {
+    const res = await api.post<{ success: boolean; data: { result: any } }>(`/verdicts/submissions/${submissionId}`);
+    return res.data;
+  },
+
+  listVerdicts: async (params: { page?: number; limit?: number; outcome?: string; submissionId?: string }) => {
+    const res = await api.get<{ success: boolean; data: { verdicts: Verdict[]; pagination: any } }>('/verdicts', { params });
+    return res.data;
+  },
 };
